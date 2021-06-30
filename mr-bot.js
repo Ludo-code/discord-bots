@@ -1,11 +1,18 @@
-const { TOKEN } = require("./config");
+const {
+  TOKEN,
+  ipdb,
+  portdb,
+  nomdb,
+  nomutilisateur,
+  motdepasse,
+} = require("./config");
 const {
   AkairoClient,
   CommandHandler,
   InhibitorHandler,
   ListenerHandler,
 } = require("discord-akairo");
-const enmap = require("enmap");
+const mysql = require("mysql2");
 
 class MyClient extends AkairoClient {
   constructor() {
@@ -54,20 +61,12 @@ const client = new MyClient({
   },
 });
 
-client.ticketsystem = new enmap({
-  persistent: true,
-  name: "ticketsystem",
-  dataDir: "./ticketdb",
-  fetchAll: true,
-  autoFetch: true,
-});
-
-client.levelingsystem = new enmap({
-  persistent: true,
-  name: "levelingsystem",
-  dataDir: "./leveldb",
-  fetchAll: true,
-  autoFetch: true,
+const connection = mysql.createConnection({
+  host: ipdb,
+  port: portdb,
+  user: nomutilisateur,
+  password: motdepasse,
+  database: nomdb,
 });
 
 module.exports = client;
