@@ -61,12 +61,17 @@ const client = new MyClient({
   },
 });
 
-const connection = mysql.createConnection({
+client.connection = new mysql.createConnection({
   host: ipdb,
   port: portdb,
   user: nomutilisateur,
   password: motdepasse,
   database: nomdb,
+});
+client.connection.connect((err) => {
+  if (err) throw err;
+  console.log("base de donnée connecté");
+  client.connection.query("SHOW TABLES", console.log);
 });
 
 module.exports = client;

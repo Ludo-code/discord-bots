@@ -41,9 +41,15 @@ class installticketcommands extends Command {
         .setFooter("Ticket support")
         .setColor("00ff00")
     );
-
+    client.connection.query(
+      `DROP TABLE IF EXISTS ${message.guild.id}_id_message`
+    );
     sent.react("🎫");
-    client.ticketsystem.set(`${message.guild.id}-id-message`, sent.id);
+    client.connection.query(
+      `CREATE TABLE ${message.guild.id}_id_message (
+       idmessage VARCHAR(50) DEFAULT ${sent.id} NOT NULL PRIMARY KEY
+     )`
+    );
 
     message.channel.send("Salon de ticket bien installer.");
   }

@@ -18,7 +18,9 @@ class messagereactionaddListener extends Listener {
 
     if (
       reaction.message.id ===
-      client.ticketsystem.get(`${reaction.message.guild.id}-id-message`)
+      client.connection.query(
+        `SELECT idmessage FROM ${reaction.message.guild.id}_id_message`
+      )
     ) {
       if (user.partial) await user.fetch();
       if (reaction.partial) await reaction.fetch();
