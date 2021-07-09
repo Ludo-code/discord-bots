@@ -12,6 +12,7 @@
     "discord.js-pagination": "^1.0.3",
     "mysql2": "^2.2.5",
     "node-fetch": "^2.6.1",
+    "sequelize": "^6.6.4",
     "yarn": "^1.22.10"
   }
 }

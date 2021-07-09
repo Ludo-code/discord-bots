@@ -42,16 +42,15 @@ class installticketcommands extends Command {
 
     let sent = await channel.send(embed);
 
-    sent.react("🎫");
+    client.connection.query(
+      `DELETE FROM ticketsystem WHERE id_guild = ${sent.guild.id}`
+    );
+    client.connection.query(
+      `INSERT INTO ticketsystem (id_message, id_guild)
+      VALUES (${sent.id}, ${sent.guild.id})`
+    );
 
-    client.connection.query(
-      `DROP TABLE IF EXISTS ${message.guild.id}_id_message`
-    );
-    client.connection.query(
-      `CREATE TABLE ${message.guild.id}_id_message (
-       idmessage VARCHAR(50) DEFAULT ${sent.id} NOT NULL PRIMARY KEY
-     )`
-    );
+    sent.react("🎫");
 
     message.channel.send("Salon de ticket bien installer.");
   }

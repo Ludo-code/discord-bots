@@ -5,14 +5,15 @@ const {
   nomdb,
   nomutilisateur,
   motdepasse,
-} = require("./config");
+} = require("./config.js");
+const ticketsystem = require("./db-modele/modele-ticket.js");
+const { Sequelize } = require("sequelize");
 const {
   AkairoClient,
   CommandHandler,
   InhibitorHandler,
   ListenerHandler,
 } = require("discord-akairo");
-const mysql = require("mysql2");
 
 class MyClient extends AkairoClient {
   constructor() {
@@ -60,19 +61,23 @@ const client = new MyClient({
     ],
   },
 });
-
-client.connection = new mysql.createConnection({
-  host: ipdb,
-  port: portdb,
-  user: nomutilisateur,
+client.db = new Sequelize({
+  username: nomutilisateur,
   password: motdepasse,
   database: nomdb,
+  host: ipdb,
+  port: portdb,
+  dialect: "mysql",
 });
-client.connection.connect((err) => {
-  if (err) throw err;
-  console.log("base de donnée connecté");
-  client.connection.query("SHOW TABLES", console.log);
-});
+
+client.db
+  .authenticate()
+  .then(() => {
+    console.log("Base de donnée connecté");
+    ticketsystem.init(client.db);
+    ticketsystem.sync();
+  })
+  .catch((err) => console.log(err));
 
 module.exports = client;
 
